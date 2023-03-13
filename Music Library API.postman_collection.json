@@ -84,7 +84,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"release_date\": \"2006-11-12\",\r\n    \"genre\": \"Country\",\r\n    \"artist\": \"Jason Aldean\",\r\n    \"title\": \"Dirt Road Anthem\"\r\n    \r\n}",
+					"raw": "{\r\n    \"title\": \"Knee Deep\",\r\n    \"album\": \"You get What You give\",\r\n    \"release_date\": \"2014-06-20\",\r\n    \"artist\": \"Jimmy Buffet\",\r\n    \"genre\": \"Country\"\r\n    \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,7 +92,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/songs/3",
+					"raw": "http://127.0.0.1:5000/api/songs/2",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -104,7 +104,7 @@
 					"path": [
 						"api",
 						"songs",
-						"3"
+						"2"
 					]
 				}
 			},

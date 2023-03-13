@@ -29,6 +29,7 @@ class Song(db.Model):
     artist=db.Column(db.String(255),nullable=False)
     release_date=db.Column(db.Date,nullable=False)
     genre=db.Column(db.String(255))
+    album=db.Column(db.String(255))
 
     def __repr__(self):
         return f'{self.title}{self.artist}{self.release_date}'
@@ -41,8 +42,9 @@ class SongSchema(ma.Schema):
     artist=fields.String(required=True)
     release_date=fields.Date(required=True)
     genre=fields.String()
+    album=fields.String()
     class Meta:
-        fields=('id','title','artist','release_date','genre')
+        fields=('id','title','artist','release_date','genre','album')
     
     @post_load
     def create_songs(self,data,**kwargs):
@@ -88,6 +90,8 @@ class SongResource(Resource):
             song_from_db.release_date=request.json['release_date']
         if 'genre' in request.json:
             song_from_db.genre=request.json['genre']
+        if 'album' in request.json:
+            song_from_db.album=request.json['album']
         
         db.session.commit()
         return song_schema.dump(song_from_db), 200
