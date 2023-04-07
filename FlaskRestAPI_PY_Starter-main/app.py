@@ -31,6 +31,7 @@ class Song(db.Model):
     genre=db.Column(db.String(255))
     album=db.Column(db.String(255))
     num_of_likes=db.Column(db.Integer,nullable=False)
+    running_time=db.Column(db.Float)
 
     def __repr__(self):
         return f'{self.title}{self.artist}{self.release_date}'
@@ -44,8 +45,10 @@ class SongSchema(ma.Schema):
     release_date=fields.Date(required=True)
     genre=fields.String()
     album=fields.String()
+    running_time=fields.Float()
+    num_of_likes=fields.Integer()
     class Meta:
-        fields=('id','title','artist','release_date','genre','album','num_of_likes')
+        fields=('id','title','artist','release_date','genre','album','num_of_likes','running_time')
     
     @post_load
     def create_songs(self,data,**kwargs):
@@ -57,8 +60,17 @@ songs_schema=SongSchema(many=True)
 # Resources
 class SongListResource(Resource):
     def get(self):
+        sum=0.0
         all_songs=Song.query.all()
-        return songs_schema.dump(all_songs), 200
+        for song in all_songs:
+            sum = song.running_time + sum
+        costom_response={
+            "songs":songs_schema.dump(all_songs),
+            "total":round(sum/60,2)
+        }
+        return costom_response, 200
+        # all_songs=Song.query.all()
+        # return songs_schema.dump(all_songs)
 
     def post(self):
         try:
@@ -66,7 +78,7 @@ class SongListResource(Resource):
             new_song=song_schema.load(form_data)
             db.session.add(new_song)
             db.session.commit()
-            return song_schema.dump(new_song)
+            return song_schema.dump(new_song), 201
         except ValidationError as err:
             return err.messages, 400
 class SongResource(Resource):
@@ -95,6 +107,8 @@ class SongResource(Resource):
             song_from_db.album=request.json['album']
         if 'num_of_likes' in request.json:
             song_from_db.num_of_likes=request.json['num_of_likes']
+        if 'running_time' in request.json:
+            song_from_db.running_time=request.json['running_time']
         
         db.session.commit()
         return song_schema.dump(song_from_db), 200
